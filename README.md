@@ -13,6 +13,12 @@ Unofficial student project, not affiliated with UT Austin or the University Co-o
 | `syllabi.json` | Materials excerpts from public UT syllabi |
 | `verified.json` | Results of the student textbook survey, for the "Student verified" badges |
 
-## Updating
+## Survey results update automatically
 
-Upload a new copy of `data.json` (new course data) or `verified.json` (new survey results) with the same file name: **Add file → Upload files → Commit changes**. The live site updates within a couple of minutes.
+The **Update survey results** workflow (`.github/workflows/update-survey.yml`) runs every 30 minutes. It downloads the Google Form responses, matches each one to a course and section with `.github/scripts/survey_import.py`, and commits a new `verified.json` when something changed. GitHub Pages then rebuilds the site. To run it right away: **Actions → Update survey results → Run workflow**.
+
+It reads the responses from the `SURVEY_CSV_URL` repository variable (Settings → Secrets and variables → Actions → Variables). Responses that can't be matched to a course are skipped. Asking for the course code on the form (e.g. GOV 364V) makes matching reliable.
+
+## Updating course data
+
+Upload a new copy of `data.json` with the same file name: **Add file → Upload files → Commit changes**. The live site updates within a couple of minutes.

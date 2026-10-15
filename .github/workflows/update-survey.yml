@@ -1,0 +1,66 @@
+# Pulls the Google Form responses, matches them to courses, and updates verified.json
+# (the "Student verified" badges). Runs every 30 minutes and from the Actions tab
+# ("Run workflow"). A commit to main makes GitHub Pages rebuild the live site.
+#
+# Setup: Settings -> Secrets and variables -> Actions -> Variables -> New repository variable
+#   Name:  SURVEY_CSV_URL
+#   Value: a link that downloads the responses sheet as CSV, either
+#          https://docs.google.com/spreadsheets/d/<SHEET_ID>/export?format=csv&gid=0
+#          (sheet shared as "Anyone with the link: Viewer"), or a File -> Share -> Publish to web CSV link.
+# A secret with the same name also works and takes priority.
+#
+# The job logs only counts, never response text, because Actions logs on a public repo are public.
+
+name: Update survey results
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: survey-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download form responses
+        id: fetch
+        env:
+          SURVEY_CSV_URL: ${{ secrets.SURVEY_CSV_URL || vars.SURVEY_CSV_URL }}
+        run: |
+          if [ -z "$SURVEY_CSV_URL" ]; then
+            echo "::warning::SURVEY_CSV_URL is not set yet, so there is nothing to download. See the setup notes at the top of this file."
+            echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          curl -fsSL --retry 3 --max-time 60 "$SURVEY_CSV_URL" -o "$RUNNER_TEMP/responses.csv"
+          if head -c 300 "$RUNNER_TEMP/responses.csv" | grep -qi "<html"; then
+            echo "::error::Google returned a web page instead of CSV. The sheet probably isn't shared as 'Anyone with the link' or published to the web."
+            exit 1
+          fi
+          echo "Downloaded $(($(wc -l < "$RUNNER_TEMP/responses.csv") - 1)) response rows"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: Match responses to courses
+        if: steps.fetch.outputs.ok == 'true'
+        run: python3 .github/scripts/survey_import.py "$RUNNER_TEMP/responses.csv" . --min 1 --quiet
+
+      - name: Publish if anything changed
+        if: steps.fetch.outputs.ok == 'true'
+        run: |
+          if git diff --quiet -- verified.json; then
+            echo "No new survey results."; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verified.json
+          git commit -m "Update student survey results"
+          git push
