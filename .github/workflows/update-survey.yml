@@ -1,5 +1,5 @@
 # Pulls the Google Form responses, matches them to courses, and updates verified.json
-# (the "Student verified" badges). Runs every 30 minutes and from the Actions tab
+# (the "Student verified" badges). Runs once a day (about 6 AM Austin time) and from the Actions tab
 # ("Run workflow"). A commit to main makes GitHub Pages rebuild the live site.
 #
 # Setup: Settings -> Secrets and variables -> Actions -> Variables -> New repository variable
@@ -15,7 +15,7 @@ name: Update survey results
 
 on:
   schedule:
-    - cron: "7,37 * * * *"
+    - cron: "17 11 * * *"   # 11:17 UTC = 6:17 AM CDT (5:17 AM after daylight saving ends)
   workflow_dispatch:
 
 permissions:

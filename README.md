@@ -15,7 +15,7 @@ Unofficial student project, not affiliated with UT Austin or the University Co-o
 
 ## Survey results update automatically
 
-The **Update survey results** workflow (`.github/workflows/update-survey.yml`) runs every 30 minutes. It downloads the Google Form responses, matches each one to a course and section with `.github/scripts/survey_import.py`, and commits a new `verified.json` when something changed. GitHub Pages then rebuilds the site. To run it right away: **Actions → Update survey results → Run workflow**.
+The **Update survey results** workflow (`.github/workflows/update-survey.yml`) runs once a day, around 6 AM Austin time. It downloads the Google Form responses, matches each one to a course and section with `.github/scripts/survey_import.py`, and commits a new `verified.json` when something changed. GitHub Pages then rebuilds the site. To run it right away: **Actions → Update survey results → Run workflow**.
 
 It reads the responses from the `SURVEY_CSV_URL` repository variable (Settings → Secrets and variables → Actions → Variables). Responses that can't be matched to a course are skipped. Asking for the course code on the form (e.g. GOV 364V) makes matching reliable.
 
