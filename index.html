@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UT Austin Course Booklist</title>
+<meta name="description" content="Look up any Fall 2026 UT Austin course to see its required books, materials, sections and estimated cost. Unofficial student project.">
+<meta property="og:title" content="UT Austin Course Booklist">
+<meta property="og:description" content="Look up any Fall 2026 UT Austin course to see its required books, materials, sections and estimated cost. Unofficial student project.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23BF5700'/%3E%3Cpath d='M7 8v16M10 8v16M14 8v16M16 8v16M20 8v16M23 8v16M25 8v16' stroke='white' stroke-width='1.6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+[hidden]{display:none!important}
+/* Layout: a campus-bookstore lookup tool. Sticky header with two tabs; one centered column (max 1180px);
+   course view = header + receipt-style cost box, then materials (main) beside sections (aside). */
+:root{
+  --bg:#F4F4F1; --surface:#FFFFFF; --sunken:#ECEBE7; --ink:#1C1A18; --ink-2:#47423D; --muted:#746D66; --line:#E0DDD8;
+  --accent:#BF5700; --accent-ink:#9E4700; --accent-soft:#FBEADB; --on-accent:#FFFFFF;
+  --good:#1D7349; --good-soft:#E2F2E8; --warn:#8A5800; --warn-soft:#FAEFD6; --info:#2B5B87; --info-soft:#E3EDF6;
+  --shadow:0 1px 2px rgba(28,26,24,.06),0 4px 16px rgba(28,26,24,.05);
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121110; --surface:#1B1917; --sunken:#24211F; --ink:#F1EEEA; --ink-2:#D2CCC6; --muted:#A0978F; --line:#36312D;
+  --accent:#F0883A; --accent-ink:#F7A464; --accent-soft:#3A2416; --on-accent:#1A0F07;
+  --good:#63C892; --good-soft:#15301F; --warn:#E6B45A; --warn-soft:#33280F; --info:#86B8EA; --info-soft:#172636;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121110; --surface:#1B1917; --sunken:#24211F; --ink:#F1EEEA; --ink-2:#D2CCC6; --muted:#A0978F; --line:#36312D;
+  --accent:#F0883A; --accent-ink:#F7A464; --accent-soft:#3A2416; --on-accent:#1A0F07;
+  --good:#63C892; --good-soft:#15301F; --warn:#E6B45A; --warn-soft:#33280F; --info:#86B8EA; --info-soft:#172636;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:var(--accent-ink);text-underline-offset:2px}
+a:hover{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:62px;flex-wrap:wrap;padding-block:8px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);min-width:0}
+.barcode{width:34px;height:28px;flex:none;border-radius:4px;background:repeating-linear-gradient(90deg,var(--accent) 0 2px,transparent 2px 4px,var(--accent) 4px 5px,transparent 5px 8px,var(--accent) 8px 11px,transparent 11px 12px);}
+.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;display:block;line-height:1.05}
+.brand small{display:block;font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--sunken);padding:4px;border-radius:10px}
+.tab{border:0;background:transparent;padding:8px 14px;border-radius:7px;font-weight:600;font-size:14px;color:var(--ink-2);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+main{padding-block:28px 56px}
+.panel[hidden]{display:none!important}
+
+/* search hero */
+.hero{display:grid;gap:14px;margin-bottom:26px}
+.hero h1{font-size:clamp(28px,4.4vw,44px);font-weight:800;letter-spacing:-.02em}
+.hero p{margin:0;color:var(--ink-2);max-width:62ch}
+.searchbox{position:relative;max-width:760px}
+.searchbox input{width:100%;font:inherit;font-size:18px;padding:16px 18px 16px 50px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.searchbox input:focus{outline:none;border-color:var(--accent)}
+.searchbox > svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted)}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:15;overflow:hidden;max-height:min(420px,60vh);overflow-y:auto}
+.sugg button{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:baseline;width:100%;text-align:left;border:0;background:transparent;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--line)}
+.sugg button:last-child{border-bottom:0}
+.sugg button[aria-selected="true"],.sugg button:hover{background:var(--accent-soft)}
+.sugg .code{font-family:var(--mono);font-weight:600}
+.sugg .why{font-size:13px;color:var(--muted);white-space:nowrap}
+.sugg .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tries{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.chipbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-family:var(--mono);font-size:13px;cursor:pointer;color:var(--ink)}
+.chipbtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+
+/* course view */
+.course{display:grid;gap:18px}
+.chead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+.chead h2{font-size:clamp(34px,6vw,56px);font-weight:800;letter-spacing:-.02em}
+.chead .ctitle{font-size:18px;font-weight:600;color:var(--ink-2);margin-top:6px;text-transform:capitalize}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--sunken);color:var(--ink-2);white-space:nowrap}
+.tag.acc{background:var(--accent-soft);color:var(--accent-ink)}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.info{background:var(--info-soft);color:var(--info)}
+/* student-verified badge + survey reports */
+.vbadge{display:inline-flex;align-items:center;gap:6px;font-family:var(--body);font-size:13px;font-weight:700;line-height:1.2;padding:4px 11px 4px 7px;border-radius:999px;background:var(--good-soft);color:var(--good);border:1px solid color-mix(in srgb,var(--good) 35%,transparent);white-space:nowrap;vertical-align:middle}
+.vbadge svg{width:16px;height:16px;flex:none}
+.vbadge.sm{font-size:11.5px;font-weight:600;padding:2px 8px 2px 4px;gap:4px}
+.vbadge.sm svg{width:13px;height:13px}
+.vbadge.neutral{background:var(--sunken);color:var(--ink-2);border-color:var(--line)}
+.vline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:12px;font-size:13.5px;color:var(--ink-2)}
+.srep{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.srep + .srep{margin-top:8px}
+.srep .st{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-weight:600;font-size:14px}
+.srep .st svg{width:16px;height:16px;flex:none}
+.srep .st.ok{color:var(--good)}
+.srep .st.diff{color:var(--warn)}
+.srep .st .muted{font-weight:400;font-size:12.5px}
+.srep dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:13px}
+.srep dt{color:var(--muted)}
+.srep dd{margin:0;color:var(--ink-2);min-width:0;overflow-wrap:anywhere}
+.secbtn .sub .v{color:var(--good);font-weight:600}
+.secbtn .sub .rp{color:var(--warn);font-weight:600}
+.receipt{min-width:250px;background:var(--sunken);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:13px}
+.receipt .r{display:flex;gap:8px;align-items:baseline}
+.receipt .r span:nth-child(2){flex:1;border-bottom:1px dotted var(--muted);transform:translateY(-3px);min-width:12px}
+.receipt .total{font-size:28px;font-weight:600;color:var(--ink);margin-top:6px;letter-spacing:-.01em}
+.receipt .lbl{font-family:var(--body);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.receipt .sub{font-family:var(--body);font-size:12.5px;color:var(--muted);margin-top:4px}
+.cgrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-width:0}
+.card h3{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.card h3 .muted{font-family:var(--body);font-size:13px;font-weight:500}
+.reqgroup{display:grid;gap:10px;margin-bottom:18px}
+.reqgroup:last-child{margin-bottom:0}
+.reqhead{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--ink-2)}
+.reqhead::after{content:"";flex:1;height:1px;background:var(--line)}
+.item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.item .it{font-weight:600;font-size:16px;line-height:1.3}
+.item .meta{font-size:13px;color:var(--muted)}
+.prices{display:flex;flex-wrap:wrap;gap:6px}
+.price{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;white-space:nowrap;color:var(--ink-2)}
+.price b{font-weight:600;color:var(--ink)}
+.lowest{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lowest .amt{font-family:var(--mono);font-size:20px;font-weight:600}
+.lowest .basis{font-size:12.5px;color:var(--muted)}
+.item .note{font-size:13px;color:var(--ink-2);background:var(--sunken);border-radius:8px;padding:8px 10px}
+.item .links{display:flex;gap:14px;flex-wrap:wrap;font-size:13px}
+.empty{padding:16px;border-radius:12px;background:var(--sunken);color:var(--ink-2);font-size:14px}
+
+.seclist{display:grid;gap:6px}
+.secbtn{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;cursor:pointer}
+.secbtn:hover{border-color:var(--accent)}
+.secbtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.secbtn .u{font-family:var(--mono);font-weight:600}
+.secbtn .who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.secbtn .cost{font-family:var(--mono);font-size:13px}
+.secbtn .sub{grid-column:2 / -1;font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.secbtn .sub a{font-weight:500}
+.allbtn{justify-self:start;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.allbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.syl blockquote{margin:0;border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--ink-2);font-size:14px;white-space:pre-line;max-height:320px;overflow:auto}
+.flags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.pack{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.pack:first-of-type{border-top:0;padding-top:0;margin-top:0}
+
+/* majors */
+.mhead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.mhead h1,.mhead h2{font-size:clamp(28px,4.4vw,42px);font-weight:800;letter-spacing:-.02em}
+.back{border:0;background:transparent;color:var(--accent-ink);font-weight:600;cursor:pointer;padding:4px 0;font-size:14px}
+.back:hover{color:var(--accent)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tile .v{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.tile .k{font-size:12.5px;color:var(--muted);margin-top:2px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-bottom:18px}
+.bars{display:grid;gap:2px}
+.bar{display:grid;grid-template-columns:minmax(78px,96px) minmax(0,1fr);gap:10px;align-items:center;border:0;background:transparent;padding:3px 0;text-align:left;cursor:pointer;border-radius:6px}
+.bar:hover .fill,.bar:focus-visible .fill{background:var(--accent-ink)}
+.bars.wide .bar{grid-template-columns:minmax(120px,190px) minmax(0,1fr)}
+.bar .lab{font-family:var(--mono);font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .track{display:flex;align-items:center;gap:8px;min-width:0}
+.bar .fill{height:16px;background:var(--accent);border-radius:0 4px 4px 0;min-width:2px}
+.bar .val{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap}
+.charthint{font-size:12.5px;color:var(--muted);margin-top:8px}
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12.5px;padding:7px 10px;border-radius:8px;max-width:280px;box-shadow:var(--shadow)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.tools input,.tools select{font:inherit;font-size:14px;padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.tools input{flex:1;min-width:180px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface);position:sticky;top:0}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--accent-soft)}
+td.r,th.r{text-align:right}
+.pct{display:flex;align-items:center;gap:8px}
+.pct i{display:block;height:6px;border-radius:0 3px 3px 0;background:var(--accent);min-width:1px}
+.pct .bg{width:60px;height:6px;background:var(--sunken);border-radius:3px;display:flex}
+.loading{padding:40px 0;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-block:22px 40px;color:var(--muted);font-size:13px}
+footer p{margin:0 0 8px;max-width:90ch}
+
+@media (max-width:900px){
+  .cgrid,.two{grid-template-columns:minmax(0,1fr)}
+  .chead{grid-template-columns:minmax(0,1fr)}
+  .receipt{min-width:0}
+}
+@media (max-width:560px){
+  .tabs{margin-left:0;width:100%}
+  .tab{flex:1}
+  .sugg button{grid-template-columns:78px 1fr}
+  .sugg .why{display:none}
+  .card{padding:16px}
+  .chead{padding:18px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .course,.dash{animation:rise .25s ease-out}
+  @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#find" id="brandlink">
+      <span class="barcode" aria-hidden="true"></span>
+      <span><b>UT Austin Course Booklist</b><small>Fall 2026 · unofficial student tool</small></span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-find" aria-selected="true" aria-controls="panel-find">Find a course</button>
+      <button class="tab" role="tab" id="tab-majors" aria-selected="false" aria-controls="panel-majors">Majors</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" id="panel-find" role="tabpanel" aria-labelledby="tab-find">
+    <div class="hero">
+      <h1>What do you need for your class?</h1>
+      <p>Type a course like <span class="mono">BGS 337</span>, a title, an instructor, or a unique number. You get every section, its instructor, the required books and materials, and what they cost.</p>
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search a course, e.g. BGS 337" aria-label="Search courses" aria-autocomplete="list" aria-controls="sugg">
+        <div class="sugg" id="sugg" role="listbox" hidden></div>
+      </div>
+      <div class="tries" id="tries"><span>Try</span></div>
+      <div class="tries" id="vtries" hidden></div>
+    </div>
+    <div id="result"><p class="loading">Loading Fall 2026 course data…</p></div>
+  </section>
+
+  <section class="panel" id="panel-majors" role="tabpanel" aria-labelledby="tab-majors" hidden>
+    <div id="majors"><p class="loading">Loading Fall 2026 course data…</p></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>About this data.</b> Book lists come from the University Co-op's Fall 2026 adoption list (the official UT book list), pulled October 13, 2026. Prices are Co-op online prices for the exact ISBN, or VitalSource eTextbook prices when the Co-op doesn't sell the item. Syllabus excerpts come from UT's public Syllabi &amp; CVs archive and Simple Syllabus.</p>
+    <p><b>Estimated required cost</b> adds the lowest listed price of each item marked Required, Longhorn Textbook Access, or "attend class before buying". Optional, recommended and alternative items are left out, and so are coursepacks sold by Jenn's Copies or UT Document Solutions, which are shown separately.</p>
+    <p><b>Longhorn Textbook Access (LTA)</b> items are billed through Canvas, and their real price appears only in your Canvas "My Textbooks" tab. UT says the LTA price is the lowest available, so the VitalSource price shown here is an upper bound.</p>
+    <p id="vfoot" hidden></p>
+    <p>Unofficial student project, not affiliated with UT Austin or the University Co-op. Book lists change during the semester, so check your syllabus or Canvas before you buy.</p>
+  </div>
+</footer>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = v => v == null ? "–" : "$" + Number(v).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const money0 = v => v == null ? "–" : "$" + Math.round(v).toLocaleString("en-US");
+const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
+const tcase = s => String(s || "").toLowerCase().replace(/(^|[\s\-'(,\/])([a-z])/g, (m, a, b) => a + b.toUpperCase());
+const person = s => s ? tcase(s) : "Instructor not listed";
+const plural = (n, w, p) => n + " " + (n === 1 ? w : (p || w + "s"));
+const hashOf = s => String(s).replace(/ /g, "_");
+const unhash = s => String(s).replace(/_/g, " ");
+
+const REQ = {R:"Required", L:"Longhorn Textbook Access", W:"Attend class before buying", U:"Unspecified", O:"Optional", C:"Recommended", A:"Alternative", N:"Note"};
+const REQ_ORDER = ["R","L","W","U","O","C","A","N"];
+const COUNTS = new Set(["R","L","W"]);
+const BASIS = {coop:"Co-op price", vs:"VitalSource retail price (LTA may be lower)", pub:"Publisher price (LTA may be lower)", free:"Free", none:"No public price"};
+function typeChip(ty){
+  if (!ty) return "";
+  if (ty.startsWith("Longhorn")) return '<span class="tag acc">LTA digital, billed in Canvas</span>';
+  if (ty.startsWith("Coursepack") || ty.startsWith("Case pack")) return '<span class="tag info">' + esc(ty.replace("Coursepack – ", "Coursepack · ")) + "</span>";
+  if (ty.startsWith("Access code")) return '<span class="tag warn">Access code / courseware</span>';
+  if (ty.startsWith("Free")) return '<span class="tag good">' + esc(ty) + "</span>";
+  if (ty.startsWith("Book")) return '<span class="tag">Book</span>';
+  return '<span class="tag">' + esc(ty) + "</span>";
+}
+
+let D = null, EX = null, COURSE = new Map(), DEPT = new Map(), UT = null, UNIQ = new Map();
+let VER = {r: [], sec: {}, min: 1, total: 0};   // student survey results (verified.json)
+let VCOURSES = [];
+
+/* ---------------- student verification ---------------- */
+const CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.5" fill="currentColor"/><path d="M4.6 8.3l2.2 2.2 4.6-4.8" fill="none" stroke="var(--good-soft)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const WARN = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2 15.2 14.3H.8z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M8 6.2v3.6M8 11.9v.1" stroke="var(--warn-soft)" stroke-width="1.7" stroke-linecap="round"/></svg>';
+const fmtDate = d => { const x = new Date(String(d).slice(0, 10) + "T12:00:00"); return isNaN(x) ? String(d || "") : x.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}); };
+const counts = i => VER.r[i] && VER.r[i].ok && VER.r[i].cur;
+function vBadge(c, size){
+  if (!c.vsecs.length) return (c.reps.length && size !== "sm") ? '<span class="vbadge neutral">Student report</span>' : "";
+  const part = c.vsecs.length < c.s.length;
+  const tip = "Verified by student survey: " + (part ? c.vsecs.length + " of " + plural(c.s.length, "section") + " (" + c.vsecs.map(s => s.u).join(", ") + ")" : "all sections");
+  const label = size === "sm" ? (part ? plural(c.vsecs.length, "section") + " verified" : "Student verified") : "Student verified" + (part ? " · " + c.vsecs.length + " of " + plural(c.s.length, "section") : "");
+  return '<span class="vbadge' + (size === "sm" ? " sm" : "") + '" title="' + esc(tip) + '">' + CHECK + esc(label) + "</span>";
+}
+function vLine(c){
+  if (!c.reps.length) return "";
+  const conf = c.reps.filter(counts).length;
+  const latest = c.reps.map(i => VER.r[i].d).sort().pop();
+  let txt;
+  if (c.vsecs.length){
+    const part = c.vsecs.length < c.s.length;
+    txt = plural(conf, "student") + " confirmed the book list" + (part ? " for " + c.vsecs.slice(0, 3).map(s => "unique " + s.u + (s.tt ? " (" + tcase(s.tt) + ")" : "")).join(", ") : "") + " · " + fmtDate(latest);
+  } else txt = plural(c.reps.length, "student report") + " from the survey, see below";
+  return '<div class="vline">' + vBadge(c) + "<span>" + esc(txt) + "</span></div>";
+}
+function reportsCard(c, secs){
+  const ids = [...new Set(secs.flatMap(s => s.rep))];
+  if (!ids.length) return "";
+  const reps = ids.map(i => VER.r[i]).sort((a, b) => String(b.d).localeCompare(String(a.d)));
+  const ok = reps.filter(r => r.ok && r.cur).length;
+  const secLabel = u => { const x = UNIQ.get(u); if (!x) return esc(u); return '<span class="mono">' + esc(u) + "</span> " + esc(person(x.s.in)) + (x.c !== c ? ' <span class="muted">(' + esc(x.c.c) + ")</span>" : ""); };
+  const one = r => {
+    const s0 = UNIQ.get(r.u[0]), est = s0 ? s0.s.c : null;
+    const status = r.ok ? '<div class="st ok">' + CHECK + "Matches our book list" : '<div class="st diff">' + WARN + "Different from our book list";
+    const when = [r.sem, fmtDate(r.d)].filter(Boolean).join(" · ") + (r.cur ? "" : " · not counted, different semester");
+    const rows = [];
+    rows.push(["Books to buy", (r.n != null ? r.n : "not given") + ' <span class="muted">· our list: ' + r.rq + "</span>"]);
+    if (r.b) rows.push(["They listed", "“" + esc(r.b) + "”"]);
+    if (r.p) rows.push(["They paid", esc(r.p) + (est != null && r.po != null ? ' <span class="muted">· our estimate ' + money(est) + (r.po ? " fits" : " doesn't fit") + "</span>" : "")]);
+    rows.push([r.u.length > 1 ? "Sections" : "Section", r.u.map(secLabel).join("<br>")]);
+    return '<div class="srep">' + status + ' <span class="muted">' + esc(when) + "</span></div><dl>" + rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + v + "</dd>").join("") + "</dl></div>";
+  };
+  const more = reps.length > 4 ? '<p class="muted" style="margin:8px 0 0;font-size:13px">and ' + plural(reps.length - 4, "more report") + "</p>" : "";
+  return '<div class="card"><h3>Student reports <span class="muted">' + (ok ? plural(ok, "student") + " confirmed" : "from the textbook survey") + "</span></h3>" + reps.slice(0, 4).map(one).join("") + more + "</div>";
+}
+
+/* ---------------- data ---------------- */
+async function load(){
+  const [r, vj] = await Promise.all([fetch("data.json"), fetch("verified.json").then(x => x.ok ? x.json() : null).catch(() => null)]);
+  D = await r.json();
+  if (vj && Array.isArray(vj.r) && vj.sec) VER = vj;
+  const vmin = Math.max(1, VER.min || 1);
+  for (const c of D.courses){
+    for (const s of c.s){
+      UNIQ.set(s.u, {c, s});
+      s.rep = VER.sec[s.u] || [];
+      s.ver = s.rep.filter(counts).length >= vmin;
+    }
+    c.reps = [...new Set(c.s.flatMap(s => s.rep))];
+    c.vsecs = c.s.filter(s => s.ver);
+    c.key = norm(c.c);
+    const costs = c.s.filter(s => s.c != null).map(s => s.c);
+    c.med = median(costs); c.min = costs.length ? Math.min(...costs) : null; c.max = costs.length ? Math.max(...costs) : null;
+    c.listed = c.s.filter(s => s.st === "listed").length;
+    c.inst = [...new Set(c.s.map(s => s.in).filter(Boolean))];
+    c.lta = c.s.some(s => s.m.some(m => m[1] === "L"));
+    c.packs = c.s.some(s => s.pk);
+    c.access = c.s.some(s => s.m.some(m => (D.items[m[0]].ty || "").startsWith("Access")));
+    c.nitems = new Set(c.s.flatMap(s => s.m.map(m => m[0]))).size;
+    c.hay = (c.c + " " + c.t + " " + c.inst.join(" ") + " " + c.s.map(s => s.tt || "").join(" ")).toUpperCase();
+    COURSE.set(c.key, c);
+    if (!DEPT.has(c.d)) DEPT.set(c.d, []);
+    DEPT.get(c.d).push(c);
+  }
+  UT = deptStats(D.courses);
+  VCOURSES = D.courses.filter(c => c.vsecs.length);
+  fetch("syllabi.json").then(r => r.json()).then(x => { EX = x; refreshSyllabus("result"); refreshSyllabus("majors"); }).catch(() => {});
+}
+function deptStats(list){
+  const secs = list.flatMap(c => c.s);
+  const costs = secs.filter(s => s.c != null).map(s => s.c);
+  return {
+    courses: list.length, sections: secs.length,
+    listed: secs.filter(s => s.st === "listed").length,
+    lta: secs.filter(s => s.m.some(m => m[1] === "L")).length,
+    packs: secs.filter(s => s.pk).length,
+    syl: secs.filter(s => s.sy).length,
+    med: median(costs), avg: costs.length ? costs.reduce((a, b) => a + b, 0) / costs.length : null,
+    max: costs.length ? Math.max(...costs) : null, ncost: costs.length
+  };
+}
+
+/* ---------------- search ---------------- */
+function search(q, limit = 8){
+  const raw = q.trim(); if (!raw) return [];
+  const k = norm(raw), up = raw.toUpperCase();
+  const out = [];
+  for (const c of D.courses){
+    let score = 0, why = "";
+    if (c.key === k) score = 1000;
+    else if (c.key.startsWith(k)) score = 700 - (c.key.length - k.length);
+    else if (/^\d{5}$/.test(raw) && c.s.some(s => s.u === raw)) { score = 900; why = "Unique " + raw; }
+    else if (up.length >= 3 && c.hay.includes(up)){
+      score = 300;
+      const inst = c.inst.find(i => i.toUpperCase().includes(up));
+      if (inst) { why = person(inst); score = 350; }
+      else if (c.t.toUpperCase().includes(up)) score = 400;
+    } else if (up.length >= 3){
+      const words = up.split(/\s+/).filter(Boolean);
+      if (words.length > 1 && words.every(w => c.hay.includes(w))) score = 200;
+    }
+    if (score) out.push({c, score: score + Math.min(c.s.length, 50) / 100, why});
+  }
+  out.sort((a, b) => b.score - a.score || a.c.c.localeCompare(b.c.c, "en", {numeric: true}));
+  return out.slice(0, limit);
+}
+let sel = -1, cur = [];
+function showSugg(){
+  const box = $("#sugg"), q = $("#q").value;
+  cur = search(q); sel = cur.length ? 0 : -1;
+  if (!q.trim()) { box.hidden = true; return; }
+  if (!cur.length){ box.innerHTML = '<div class="empty" style="margin:8px">No course matches "' + esc(q) + '". Try a course code like BGS 337, part of a title, or an instructor\'s last name.</div>'; box.hidden = false; return; }
+  box.innerHTML = cur.map((r, i) => '<button role="option" data-i="' + i + '" aria-selected="' + (i === sel) + '"><span class="code">' + esc(r.c.c) + '</span><span class="t">' + (r.c.vsecs.length ? vBadge(r.c, "sm") + " " : "") + esc(tcase(r.c.t)) + (r.why ? ' <span class="muted">· ' + esc(r.why) + "</span>" : "") + '</span><span class="why">' + plural(r.c.s.length, "section") + (r.c.med != null ? " · " + money(r.c.med) : "") + "</span></button>").join("");
+  box.hidden = false;
+}
+function moveSel(d){ if (!cur.length) return; sel = (sel + d + cur.length) % cur.length; [...$("#sugg").children].forEach((b, i) => b.setAttribute("aria-selected", i === sel)); $("#sugg").children[sel]?.scrollIntoView({block: "nearest"}); }
+function pick(c){ $("#sugg").hidden = true; $("#q").value = c.c; go("course-" + hashOf(c.c)); }
+
+/* ---------------- course view ---------------- */
+function aggregate(c, secFilter){
+  const secs = secFilter ? c.s.filter(s => s.u === secFilter) : c.s;
+  const map = new Map();
+  for (const s of secs) for (const [ix, rq] of s.m){
+    const key = ix + "|" + rq;
+    if (!map.has(key)) map.set(key, {ix, rq, us: []});
+    map.get(key).us.push(s.u);
+  }
+  return {secs, rows: [...map.values()]};
+}
+function itemCard(row, total){
+  const it = D.items[row.ix];
+  const prices = [];
+  if (it.n != null) prices.push("New <b>" + money(it.n) + "</b>");
+  if (it.u != null) prices.push("Used <b>" + money(it.u) + "</b>");
+  if (it.db != null) prices.push("Digital <b>" + money(it.db) + "</b>");
+  if (it.dr != null) prices.push("Digital rental <b>" + money(it.dr) + "</b>");
+  if (it.ac != null) prices.push("Access code <b>" + money(it.ac) + "</b>");
+  if (it.o != null) prices.push("Co-op <b>" + money(it.o) + "</b>");
+  if (it.vs != null) prices.push("VitalSource <b>" + money(it.vs) + "</b>");
+  if (it.pp != null) prices.push("Publisher <b>" + money(it.pp) + "</b>");
+  const meta = [it.a, it.e, it.p].filter(Boolean).map(esc).join(" · ");
+  const title = it.t ? esc(it.t) : "Item not identified publicly";
+  const subset = row.us.length < total ? '<div class="meta">Listed for ' + plural(row.us.length, "section") + ': <span class="mono">' + row.us.join(", ") + "</span></div>" : "";
+  let note = "";
+  if (it.ty && it.ty.startsWith("Longhorn")) note = "Delivered through Longhorn Textbook Access: you're opted in automatically and billed through Canvas. The real price is only shown in Canvas → My Textbooks.";
+  else if (it.nt) note = it.nt.replace(/^Co-op note: /, "Co-op note: ").split(" · ").filter(x => !x.startsWith("LTA price")).join(" · ");
+  const links = [];
+  if (it.cu) links.push('<a href="' + esc(it.cu) + '" target="_blank" rel="noopener">Co-op listing ↗</a>');
+  if (it.vu) links.push('<a href="' + esc(it.vu) + '" target="_blank" rel="noopener">VitalSource ↗</a>');
+  return '<article class="item"><div class="it">' + title + '</div>' +
+    (meta ? '<div class="meta">' + meta + "</div>" : "") +
+    '<div class="tags" style="margin-top:0">' + typeChip(it.ty) + '<span class="tag mono">ISBN ' + esc(it.i) + "</span>" + (it.oos ? '<span class="tag warn">Co-op online: out of stock</span>' : "") + (it.fa ? '<span class="tag good">Free library / OER copy also listed</span>' : "") + "</div>" +
+    (prices.length ? '<div class="prices">' + prices.map(p => '<span class="price">' + p + "</span>").join("") + "</div>" : "") +
+    (it.lo === 0 && /^Coursepack/.test(it.ty || "") ? '<div class="lowest"><span class="amt" style="font-size:16px">Bought outside the Co-op</span><span class="basis">see Coursepacks for the seller and price</span></div>' :
+    '<div class="lowest"><span class="amt">' + (it.lo == null ? "No public price" : money(it.lo)) + '</span><span class="basis">' + (it.lo == null ? "Check Canvas or the Co-op" : "lowest · " + esc(BASIS[it.b] || "")) + "</span></div>") +
+    subset + (note ? '<div class="note">' + esc(note) + "</div>" : "") +
+    (links.length ? '<div class="links">' + links.join("") + "</div>" : "") + "</article>";
+}
+const VIEWS = {};   // per host id ("result" | "majors"): {course, sec, back}
+function renderCourse(c, host, back){
+  VIEWS[host.id] = {course: c, sec: null, back};
+  drawCourse(host.id);
+}
+function drawCourse(hid){
+  const host = document.getElementById(hid);
+  const {course: c, sec, back} = VIEWS[hid];
+  const {secs, rows} = aggregate(c, sec);
+  const costSecs = secs.filter(s => s.c != null);
+  const costs = costSecs.map(s => s.c);
+  const med = median(costs), mn = costs.length ? Math.min(...costs) : null, mx = costs.length ? Math.max(...costs) : null;
+  const np = Math.max(0, ...secs.map(s => s.np || 0));
+  const deptName = D.depts[c.d] || c.d;
+  // receipt
+  const reqRows = rows.filter(r => COUNTS.has(r.rq));
+  let receipt;
+  if (sec){
+    const s = secs[0];
+    receipt = '<div class="lbl">Est. required cost · unique ' + esc(s.u) + "</div>" +
+      (reqRows.length ? reqRows.map(r => { const it = D.items[r.ix]; return '<div class="r"><span>' + esc((it.t || it.i).slice(0, 34)) + (it.t && it.t.length > 34 ? "…" : "") + "</span><span></span><span>" + (it.lo == null ? "n/a" : money(it.lo)) + "</span></div>"; }).join("") : "") +
+      '<div class="total">' + (s.c != null ? money(s.c) : "$0.00") + "</div>" +
+      '<div class="sub">' + (s.c == null ? (s.st === "listed" ? "Only optional items listed" : "Nothing listed with the Co-op") : (s.np ? plural(s.np, "item") + " without a public price not included" : "Lowest listed price of each required item")) + "</div>";
+  } else {
+    receipt = '<div class="lbl">Est. required cost</div><div class="total">' + (med != null ? money(med) : "$0.00") + "</div>" +
+      '<div class="sub">' + (med == null ? (c.listed ? "Only optional items listed" : "No books listed with the Co-op") :
+        (costs.length > 1 && mn !== mx ? "Typical section · ranges " + money(mn) + "–" + money(mx) + " across " + plural(costs.length, "section") : (costs.length > 1 ? "Same for all " + costs.length + " sections with books" : "One section with required items"))) + "</div>" +
+      (np ? '<div class="sub">Some items have no public price (LTA billed in Canvas)</div>' : "");
+  }
+  const packIdx = [...new Set(secs.flatMap(s => s.pk || []))];
+  if (packIdx.length){
+    const tot = packIdx.reduce((a, i) => a + D.packs[i].pr, 0);
+    receipt += '<div class="r" style="margin-top:8px"><span>+ coursepack' + (packIdx.length > 1 ? "s" : "") + "</span><span></span><span>" + money(tot) + '</span></div><div class="sub">Sold by ' + esc([...new Set(packIdx.map(i => D.packs[i].s))].join(" / ")) + (sec ? "" : (packIdx.length > 1 ? "; sections may use different packets" : "")) + "</div>";
+  }
+  const tags = [];
+  tags.push('<span class="tag">' + plural(c.s.length, "section") + "</span>");
+  tags.push('<span class="tag">' + plural(c.inst.length, "instructor") + "</span>");
+  tags.push(c.listed ? '<span class="tag good">Books listed for ' + c.listed + " of " + c.s.length + "</span>" : '<span class="tag">No books listed with the Co-op</span>');
+  if (c.lta) tags.push('<span class="tag acc">Longhorn Textbook Access</span>');
+  if (c.packs) tags.push('<span class="tag info">Coursepack</span>');
+  if (c.access) tags.push('<span class="tag warn">Access code</span>');
+  // materials
+  const groups = REQ_ORDER.map(k => ({k, rows: rows.filter(r => r.rq === k)})).filter(g => g.rows.length);
+  const matsHtml = groups.length ? groups.map(g => '<div class="reqgroup"><div class="reqhead">' + esc(REQ[g.k]) + " · " + g.rows.length + "</div>" + g.rows.map(r => itemCard(r, secs.length)).join("") + "</div>").join("")
+    : '<div class="empty">' + (sec ? "No materials are listed with the Co-op for this section." : "No materials are listed with the Co-op for this course.") + " That usually means readings are free, posted on Canvas, or announced on the first day. Check the syllabus excerpt" + (secs.some(s => s.sy) ? " below." : " or Canvas.") + "</div>";
+  // sections
+  const secHtml = '<button class="allbtn" data-sec="" aria-pressed="' + (!sec) + '">All sections</button>' +
+    c.s.map(s => '<button class="secbtn" data-sec="' + esc(s.u) + '" aria-pressed="' + (sec === s.u) + '">' +
+      '<span class="u">' + esc(s.u) + '</span><span class="who">' + esc(person(s.in)) + '</span><span class="cost">' + (s.c != null ? money(s.c) : (s.st === "listed" ? "optional" : "–")) + "</span>" +
+      '<span class="sub">' + (s.ver ? '<span class="v">✓ Student verified</span>' : (s.rep.length ? '<span class="rp">Student report</span>' : "")) + (s.tt ? "<span>" + esc(tcase(s.tt)) + "</span>" : "") + (s.st === "listed" ? "<span>" + plural(s.m.length, "item") + "</span>" : "<span>No books listed</span>") +
+      (s.sy ? '<a href="' + esc(s.sy) + '" target="_blank" rel="noopener" data-stop>Syllabus ↗</a>' : "<span>No public syllabus</span>") +
+      '<a href="https://www.universitycoop.com/pages/adoption-search-results?courseId[]=' + esc(s.sid) + '" target="_blank" rel="noopener" data-stop>Co-op ↗</a></span></button>').join("");
+  // coursepacks
+  const pk = packIdx.map(i => D.packs[i]);
+  const packHtml = pk.length ? '<div class="card"><h3>Coursepacks <span class="muted">not in the estimate above</span></h3>' + pk.map(p => '<div class="pack"><div style="font-weight:600">' + esc(p.t) + '</div><div class="meta muted" style="font-size:13px">' + esc(p.s) + (p.in ? " · " + esc(p.in) : "") + " · " + esc(p.f) + '</div><div class="lowest"><span class="amt">' + money(p.pr) + '</span><span class="basis">' + (p.av ? "available online" : "listed, currently unavailable") + ' · <a href="' + esc(p.u) + '" target="_blank" rel="noopener">Order page ↗</a></span></div></div>').join("") + "</div>" : "";
+  host.innerHTML = (back ? '<button class="back" data-back>← ' + esc(back.label) + "</button>" : "") +
+    '<article class="course" data-code="' + esc(c.c) + '">' +
+    '<div class="chead"><div><div class="eyebrow">' + esc(c.d) + " · " + esc(deptName) + '</div><h2 class="num">' + esc(c.c) + '</h2><div class="ctitle">' + esc(tcase(c.t)) + "</div>" + vLine(c) + '<div class="tags">' + tags.join("") + '</div></div><div class="receipt">' + receipt + "</div></div>" +
+    '<div class="cgrid"><div class="card"><h3>Course materials <span class="muted">' + (sec ? "unique " + esc(sec) : "all sections") + "</span></h3>" + matsHtml + "</div>" +
+    '<div style="display:grid;gap:18px;min-width:0">' + reportsCard(c, secs) + '<div class="card"><h3>Sections <span class="muted">select one to see its list</span></h3><div class="seclist">' + secHtml + "</div></div>" + packHtml +
+    '<div class="card syl" data-syl></div></div></div></article>';
+  refreshSyllabus(hid);
+}
+function refreshSyllabus(hid){
+  const host = document.getElementById(hid), V = VIEWS[hid];
+  const card = host && host.querySelector("[data-syl]"); if (!card || !V || !V.course) return;
+  const c = V.course, sec = V.sec;
+  const cands = (sec ? c.s.filter(s => s.u === sec) : c.s).filter(s => s.sy);
+  if (!cands.length){ card.innerHTML = "<h3>From the syllabus</h3><div class=\"empty\">No public syllabus is posted" + (sec ? " for this section" : " for this course") + " yet.</div>"; return; }
+  const s = cands.find(x => x.x != null) || cands[0];
+  const flags = (s.fl || []).map(f => '<span class="tag ' + (f.startsWith("Free") ? "good" : f.startsWith("Coursepack") || f.startsWith("Case") ? "info" : f.startsWith("Longhorn") ? "acc" : "warn") + '">' + esc(D.flags[f] || f) + "</span>").join("");
+  let body;
+  if (s.x == null) body = '<div class="empty">The syllabus doesn\'t have a recognizable materials section. Open it to check.</div>';
+  else if (!EX) body = '<div class="empty">Loading syllabus excerpt…</div>';
+  else body = "<blockquote>" + esc(EX[s.x]).replace(/ \| /g, "\n") + "</blockquote>";
+  const extra = s.xi ? '<p class="muted" style="font-size:13px;margin:10px 0 0">The syllabus also cites ISBN <span class="mono">' + s.xi.map(esc).join(", ") + "</span>, which isn't on the Co-op list.</p>" : "";
+  card.innerHTML = "<h3>From the syllabus <span class=\"muted\">unique " + esc(s.u) + " · " + esc(person(s.in)) + "</span></h3>" + (flags ? '<div class="flags">' + flags + "</div>" : "") + body + extra +
+    '<p style="margin:10px 0 0;font-size:13px"><a href="' + esc(s.sy) + '" target="_blank" rel="noopener">Open full syllabus ↗</a>' + (!sec && cands.length > 1 ? ' <span class="muted">· showing one section; select a section for its own</span>' : "") + "</p>";
+}
+
+/* ---------------- majors ---------------- */
+let MSTATE = {sort: "code", filter: "", csort: "code", cfilter: ""};
+function barChart(rows, fmt, onclick){
+  const max = Math.max(...rows.map(r => r.v), 1);
+  return '<div class="bars">' + rows.map((r, i) => '<button class="bar" data-go="' + esc(r.go) + '" data-tip="' + esc(r.tip) + '"><span class="lab">' + esc(r.label) + '</span><span class="track"><span class="fill" style="width:' + (r.v / max * 100).toFixed(2) + '%"></span><span class="val">' + fmt(r.v) + "</span></span></button>").join("") + "</div>";
+}
+function renderMajorsHome(){
+  const host = $("#majors");
+  const depts = [...DEPT.entries()].map(([d, list]) => ({d, name: D.depts[d] || d, st: deptStats(list)}));
+  const top = depts.filter(x => x.st.ncost >= 5).sort((a, b) => b.st.med - a.st.med).slice(0, 12);
+  const f = MSTATE.filter.trim().toUpperCase();
+  let rows = depts.filter(x => !f || x.d.toUpperCase().includes(f) || x.name.toUpperCase().includes(f));
+  const sorters = {code: (a, b) => a.d.localeCompare(b.d), name: (a, b) => a.name.localeCompare(b.name), cost: (a, b) => (b.st.med ?? -1) - (a.st.med ?? -1), sections: (a, b) => b.st.sections - a.st.sections, books: (a, b) => b.st.listed / b.st.sections - a.st.listed / a.st.sections};
+  rows.sort(sorters[MSTATE.sort]);
+  host.innerHTML = '<div class="dash"><div class="mhead"><div><div class="eyebrow">Fall 2026 · all of UT Austin</div><h1>Majors &amp; departments</h1></div></div>' +
+    '<div class="tiles">' + tile(UT.courses.toLocaleString(), "courses") + tile(UT.sections.toLocaleString(), "sections") + tile(Math.round(UT.listed / UT.sections * 100) + "%", "sections with books listed") + tile(money(UT.med), "typical est. required cost (sections with books)") + tile(UT.lta.toLocaleString(), "sections using LTA") + tile(UT.syl.toLocaleString(), "sections with a public syllabus") + (VCOURSES.length ? tile(VCOURSES.length.toLocaleString(), "courses verified by students") : "") + "</div>" +
+    '<div class="two"><div class="card"><h3>Most expensive departments <span class="muted">typical required cost per section</span></h3>' + barChart(top.map(x => ({label: x.d, v: x.st.med, go: "major-" + hashOf(x.d), tip: x.name + ": typical " + money(x.st.med) + " across " + plural(x.st.ncost, "section") + " with required items"})), money0) + '<div class="charthint">Departments with at least 5 sections that list required items. Select a bar to open the department.</div></div>' +
+    '<div class="card"><h3>Departments with the most sections</h3>' + barChart([...depts].sort((a, b) => b.st.sections - a.st.sections).slice(0, 12).map(x => ({label: x.d, v: x.st.sections, go: "major-" + hashOf(x.d), tip: x.name + ": " + x.st.sections + " sections, " + Math.round(x.st.listed / x.st.sections * 100) + "% with books listed"})), v => v.toLocaleString()) + '<div class="charthint">Select a bar to open the department.</div></div></div>' +
+    '<div class="tools"><input id="mfilter" type="search" placeholder="Filter departments, e.g. FIN or Finance" value="' + esc(MSTATE.filter) + '" aria-label="Filter departments"><select id="msort" aria-label="Sort departments">' +
+    [["code", "Sort by code"], ["name", "Sort by name"], ["cost", "Highest typical cost"], ["sections", "Most sections"], ["books", "Most with books listed"]].map(([v, l]) => '<option value="' + v + '"' + (MSTATE.sort === v ? " selected" : "") + ">" + l + "</option>").join("") + "</select></div>" +
+    '<div class="tablewrap"><table><thead><tr><th>Dept</th><th>Name</th><th class="r">Courses</th><th class="r">Sections</th><th>Books listed</th><th class="r">Typical cost</th></tr></thead><tbody>' +
+    rows.map(x => '<tr data-go="major-' + esc(hashOf(x.d)) + '" tabindex="0"><td class="mono" style="font-weight:600">' + esc(x.d) + "</td><td>" + esc(x.name) + '</td><td class="r num">' + x.st.courses + '</td><td class="r num">' + x.st.sections + '</td><td><span class="pct"><span class="bg"><i style="width:' + Math.round(x.st.listed / x.st.sections * 100) + '%"></i></span><span class="num">' + Math.round(x.st.listed / x.st.sections * 100) + '%</span></span></td><td class="r mono">' + (x.st.med != null ? money(x.st.med) : "–") + "</td></tr>").join("") +
+    (rows.length ? "" : '<tr><td colspan="6" class="muted">No department matches "' + esc(MSTATE.filter) + '".</td></tr>') + "</tbody></table></div></div>";
+  const mf = $("#mfilter"); mf.addEventListener("input", e => { MSTATE.filter = e.target.value; const pos = e.target.selectionStart; renderMajorsHome(); const n = $("#mfilter"); n.focus(); n.setSelectionRange(pos, pos); });
+  $("#msort").addEventListener("change", e => { MSTATE.sort = e.target.value; renderMajorsHome(); });
+}
+function tile(v, k){ return '<div class="tile"><div class="v">' + v + '</div><div class="k">' + k + "</div></div>"; }
+function renderDept(d){
+  const host = $("#majors"), list = DEPT.get(d);
+  if (!list){ host.innerHTML = '<div class="empty">No department "' + esc(d) + '" in the Fall 2026 list. <button class="back" data-go="majors">See all departments</button></div>'; return; }
+  const st = deptStats(list), name = D.depts[d] || d;
+  const top = list.filter(c => c.med != null).sort((a, b) => b.med - a.med).slice(0, 10);
+  const f = MSTATE.cfilter.trim().toUpperCase();
+  let rows = list.filter(c => !f || c.hay.includes(f));
+  const sorters = {code: (a, b) => a.c.localeCompare(b.c, "en", {numeric: true}), cost: (a, b) => (b.med ?? -1) - (a.med ?? -1), sections: (a, b) => b.s.length - a.s.length, title: (a, b) => a.t.localeCompare(b.t), verified: (a, b) => b.vsecs.length - a.vsecs.length || b.reps.length - a.reps.length || a.c.localeCompare(b.c, "en", {numeric: true})};
+  rows.sort(sorters[MSTATE.csort]);
+  host.innerHTML = '<div class="dash"><button class="back" data-go="majors">← All majors</button><div class="mhead"><div><div class="eyebrow">Department dashboard · Fall 2026</div><h2><span class="mono" style="font-family:var(--display)">' + esc(d) + "</span> · " + esc(name) + "</h2></div></div>" +
+    '<div class="tiles">' + tile(st.courses, "courses") + tile(st.sections, "sections") + tile(st.listed + " / " + st.sections, "sections with books listed") + tile(money(st.med), "typical est. required cost") + tile(money(st.max), "highest section cost") + tile(st.lta, "sections using LTA") + tile(st.packs, "sections with a coursepack") + "</div>" +
+    '<div class="two"><div class="card"><h3>Most expensive courses <span class="muted">typical required cost</span></h3>' + (top.length ? barChart(top.map(c => ({label: c.c, v: c.med, go: "major-" + hashOf(d) + "~" + hashOf(c.c), tip: c.c + " · " + tcase(c.t) + ": typical " + money(c.med) + (c.min !== c.max ? " (" + money(c.min) + "–" + money(c.max) + ")" : "")})), money0) + '<div class="charthint">Select a bar to open the course.</div>' : '<div class="empty">No course in this department lists required items with the Co-op.</div>') + "</div>" +
+    '<div class="card"><h3>What students are asked to buy</h3>' + mixChart(list) + "</div></div>" +
+    '<div class="tools"><input id="cfilter" type="search" placeholder="Filter ' + esc(d) + ' courses by number, title or instructor" value="' + esc(MSTATE.cfilter) + '" aria-label="Filter courses"><select id="csort" aria-label="Sort courses">' +
+    [["code", "Sort by course"], ["cost", "Highest cost"], ["sections", "Most sections"], ["title", "Sort by title"]].concat(list.some(c => c.reps.length) ? [["verified", "Student verified first"]] : []).map(([v, l]) => '<option value="' + v + '"' + (MSTATE.csort === v ? " selected" : "") + ">" + l + "</option>").join("") + "</select></div>" +
+    '<div class="tablewrap"><table><thead><tr><th>Course</th><th>Title</th><th class="r">Sections</th><th>Instructors</th><th class="r">Est. cost</th><th>Materials</th></tr></thead><tbody>' +
+    rows.map(c => '<tr data-go="major-' + esc(hashOf(d)) + "~" + esc(hashOf(c.c)) + '" tabindex="0"><td class="mono" style="font-weight:600;white-space:nowrap">' + esc(c.c) + "</td><td>" + esc(tcase(c.t)) + '</td><td class="r num">' + c.s.length + '</td><td style="min-width:160px">' + esc(c.inst.slice(0, 3).map(person).join("; ")) + (c.inst.length > 3 ? ' <span class="muted">+' + (c.inst.length - 3) + "</span>" : "") + '</td><td class="r mono" style="white-space:nowrap">' + (c.med != null ? money(c.med) + (c.min !== c.max ? '<div class="muted" style="font-size:12px">' + money0(c.min) + "–" + money0(c.max) + "</div>" : "") : "–") + '</td><td><div class="tags" style="margin:0">' + vBadge(c, "sm") + (c.listed ? '<span class="tag">' + plural(c.nitems, "item") + "</span>" : '<span class="tag">None listed</span>') + (c.lta ? '<span class="tag acc">LTA</span>' : "") + (c.packs ? '<span class="tag info">Coursepack</span>' : "") + (c.access ? '<span class="tag warn">Access code</span>' : "") + "</div></td></tr>").join("") +
+    (rows.length ? "" : '<tr><td colspan="6" class="muted">No course matches "' + esc(MSTATE.cfilter) + '".</td></tr>') + "</tbody></table></div></div>";
+  $("#cfilter").addEventListener("input", e => { MSTATE.cfilter = e.target.value; const pos = e.target.selectionStart; renderDept(d); const n = $("#cfilter"); n.focus(); n.setSelectionRange(pos, pos); });
+  $("#csort").addEventListener("change", e => { MSTATE.csort = e.target.value; renderDept(d); });
+}
+function mixChart(list){
+  const cnt = new Map();
+  const label = ty => ty.startsWith("Longhorn") ? "LTA digital (Canvas)" : ty.startsWith("Book") ? "Books" : ty.startsWith("Access") ? "Access codes" : (ty.startsWith("Coursepack") || ty.startsWith("Case")) ? "Coursepacks" : ty.startsWith("Free") ? "Free / OER" : "Other";
+  for (const c of list) for (const s of c.s) for (const [ix, rq] of s.m){ if (!COUNTS.has(rq)) continue; const l = label(D.items[ix].ty || ""); cnt.set(l, (cnt.get(l) || 0) + 1); }
+  const packs = list.reduce((a, c) => a + c.s.filter(s => s.pk).length, 0);
+  if (packs) cnt.set("Jenn's / Line Store packets", (cnt.get("Jenn's / Line Store packets") || 0) + packs);
+  const rows = [...cnt.entries()].sort((a, b) => b[1] - a[1]);
+  if (!rows.length) return '<div class="empty">No required items are listed for this department.</div>';
+  const max = Math.max(...rows.map(r => r[1]));
+  return '<div class="bars wide">' + rows.map(([l, v]) => '<div class="bar" style="cursor:default" data-tip="' + esc(l + ": " + v + " required listings across sections") + '"><span class="lab" style="font-family:var(--body);font-weight:500">' + esc(l) + '</span><span class="track"><span class="fill" style="width:' + (v / max * 100).toFixed(2) + '%"></span><span class="val">' + v.toLocaleString() + "</span></span></div>").join("") + '</div><div class="charthint">Required item listings, counted once per section.</div>';
+}
+
+/* ---------------- routing ---------------- */
+function setTab(t){
+  const f = t === "find";
+  $("#tab-find").setAttribute("aria-selected", f); $("#tab-majors").setAttribute("aria-selected", !f);
+  $("#panel-find").hidden = !f; $("#panel-majors").hidden = f;
+}
+function go(h){ if (location.hash.slice(1) === h) route(); else location.hash = h; }
+function route(){
+  if (!D) return;
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith("course-")){
+    setTab("find");
+    const c = COURSE.get(norm(unhash(h.slice(7))));
+    if (c){ $("#q").value = c.c; renderCourse(c, $("#result"), null); }
+    else $("#result").innerHTML = '<div class="empty">No Fall 2026 course matches "' + esc(unhash(h.slice(7))) + '".</div>';
+    return;
+  }
+  if (h.startsWith("major-")){
+    setTab("majors");
+    const [dpart, cpart] = h.slice(6).split("~");
+    const d = unhash(dpart);
+    if (cpart){
+      const c = COURSE.get(norm(unhash(cpart)));
+      if (c){ renderCourse(c, $("#majors"), {label: "Back to " + d + " dashboard", go: "major-" + hashOf(d)}); window.scrollTo({top: 0}); return; }
+    }
+    VIEWS.majors = null;
+    renderDept(d); window.scrollTo({top: 0}); return;
+  }
+  if (h === "majors"){ setTab("majors"); VIEWS.majors = null; renderMajorsHome(); return; }
+  setTab("find");
+  if (!$("#result .course")){ const ex = COURSE.get("BGS337"); if (ex){ renderCourse(ex, $("#result"), null); $("#result").insertAdjacentHTML("afterbegin", '<p class="muted" style="margin:0 0 10px;font-size:13px">Example result. Search above for your own course.</p>'); } }
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", e => {
+  const stop = e.target.closest("[data-stop]"); if (stop) return;
+  const sb = e.target.closest("#sugg button"); if (sb){ pick(cur[+sb.dataset.i].c); return; }
+  const s = e.target.closest("[data-sec]");
+  const hostEl = e.target.closest("#result, #majors");
+  const V = hostEl && VIEWS[hostEl.id];
+  if (s && V && V.course){ V.sec = s.dataset.sec || null; const y = window.scrollY; drawCourse(hostEl.id); window.scrollTo({top: y}); return; }
+  const b = e.target.closest("[data-back]"); if (b && V && V.back){ go(V.back.go); return; }
+  const g = e.target.closest("[data-go]"); if (g){ go(g.dataset.go); return; }
+  const t = e.target.closest(".chipbtn"); if (t){ const c = COURSE.get(norm(t.textContent)); if (c) pick(c); return; }
+  if (!e.target.closest(".searchbox")) $("#sugg").hidden = true;
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter"){ const tr = e.target.closest("tr[data-go]"); if (tr) go(tr.dataset.go); }
+});
+$("#tab-find").addEventListener("click", () => { const c = VIEWS.result && VIEWS.result.course; go(c ? "course-" + hashOf(c.c) : "find"); });
+$("#tab-majors").addEventListener("click", () => go("majors"));
+const q = $("#q");
+q.addEventListener("input", () => D && showSugg());
+q.addEventListener("focus", () => D && q.value.trim() && showSugg());
+q.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown"){ e.preventDefault(); moveSel(1); }
+  else if (e.key === "ArrowUp"){ e.preventDefault(); moveSel(-1); }
+  else if (e.key === "Enter"){ e.preventDefault(); if (!D) return; const r = cur.length ? cur[Math.max(sel, 0)] : search(q.value)[0]; if (r) pick(r.c); else showSugg(); }
+  else if (e.key === "Escape"){ $("#sugg").hidden = true; }
+});
+const tip = $("#tip");
+document.addEventListener("pointermove", e => {
+  const t = e.target.closest("[data-tip]");
+  if (!t){ tip.hidden = true; return; }
+  tip.textContent = t.dataset.tip; tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+  if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+});
+window.addEventListener("hashchange", route);
+
+load().then(() => {
+  $("#tries").innerHTML = "<span>Try</span>" + ["BGS 337", "FIN 357", "M 408C", "ACC 311", "GOV 310L", "CH 301"].filter(c => COURSE.has(norm(c))).map(c => '<button class="chipbtn">' + c + "</button>").join("");
+  if (VCOURSES.length){
+    const latest = c => c.reps.map(i => VER.r[i].d).sort().pop() || "";
+    const vt = $("#vtries");
+    vt.innerHTML = '<span class="vbadge sm">' + CHECK + "Verified by students</span>" + [...VCOURSES].sort((a, b) => latest(b).localeCompare(latest(a))).slice(0, 10).map(c => '<button class="chipbtn">' + esc(c.c) + "</button>").join("");
+    vt.hidden = false;
+  }
+  if (VER.total){
+    const vf = $("#vfoot");
+    vf.innerHTML = "<b>Student verified</b> means " + (VER.min > 1 ? "at least " + VER.min + " students" : "a student") + " who took that section in " + esc(VER.term || "this semester") + " answered our textbook survey and named the same required books listed here. Reports that don't match our list are still shown on the course page, without the badge. " + plural(VER.total, "survey response") + " so far, " + VER.matched + " matched to a course · updated " + esc(fmtDate(VER.asof)) + ".";
+    vf.hidden = false;
+  }
+  route();
+}).catch(err => {
+  $("#result").innerHTML = $("#majors").innerHTML = '<div class="empty">The course data didn\'t load (' + esc(err.message) + "). Reload the page to try again.</div>";
+});
+</script>
+</body>
+</html>
