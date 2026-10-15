@@ -112,6 +112,29 @@ main{padding-block:28px 56px}
 .srep dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:13px}
 .srep dt{color:var(--muted)}
 .srep dd{margin:0;color:var(--ink-2);min-width:0;overflow-wrap:anywhere}
+/* intro (home state before a course is chosen) */
+.intro{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
+.intro-main{padding:26px 28px}
+.intro-main h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-.02em;margin:8px 0 12px;max-width:22ch}
+.intro-main > p{margin:0 0 22px;color:var(--ink-2);max-width:62ch}
+.steps{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:14px;counter-reset:step}
+.steps li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start;counter-increment:step}
+.steps li::before{content:counter(step);width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--mono);font-weight:600;display:grid;place-items:center}
+.steps b{display:block;font-size:15.5px;margin-top:5px}
+.steps span{display:block;color:var(--ink-2);font-size:14px;margin-top:2px}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 16px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent)}
+.btn:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink)}
+.intro-side{display:grid;gap:18px;min-width:0}
+.intro-side .receipt{min-width:0;display:grid;gap:5px;font-size:13.5px}
+.intro-side .receipt .r span:last-child{font-weight:600;color:var(--ink)}
+.legend{display:grid;gap:12px;margin:0}
+.legend dt{display:flex}
+.legend dd{margin:4px 0 0;font-size:13px;color:var(--ink-2)}
+.fine{font-size:12.5px;color:var(--muted);margin:14px 0 0}
+@media (max-width:900px){.intro{grid-template-columns:minmax(0,1fr)}.intro-main{padding:22px 20px}}
 .secbtn .sub .v{color:var(--good);font-weight:600}
 .secbtn .sub .rp{color:var(--warn);font-weight:600}
 .receipt{min-width:250px;background:var(--sunken);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:13px}
@@ -539,6 +562,36 @@ function refreshSyllabus(hid){
     '<p style="margin:10px 0 0;font-size:13px"><a href="' + esc(s.sy) + '" target="_blank" rel="noopener">Open full syllabus ↗</a>' + (!sec && cands.length > 1 ? ' <span class="muted">· showing one section; select a section for its own</span>' : "") + "</p>";
 }
 
+/* ---------------- intro ---------------- */
+function renderIntro(){
+  const n = v => D ? Number(v).toLocaleString() : "…";
+  const row = (k, v) => '<div class="r"><span>' + k + "</span><span></span><span>" + v + "</span></div>";
+  $("#result").innerHTML = '<section class="intro" aria-label="About this site">' +
+    '<div class="card intro-main"><div class="eyebrow">Fall 2026 · every UT Austin course</div>' +
+    "<h2>Know what your classes cost before you buy a single book.</h2>" +
+    "<p>Book lists are scattered across the Co-op, Canvas and hundreds of syllabi. This site puts them in one place, so you can see exactly what each section requires and what it will cost before you buy anything.</p>" +
+    '<ol class="steps">' +
+    "<li><div><b>Search your course</b><span>Use the box above: a course code like BGS 337, part of a title, a professor's last name, or a 5-digit unique number.</span></div></li>" +
+    "<li><div><b>Pick your section</b><span>Professors teaching the same course often assign different books, so each section shows its own list, syllabus and Co-op link.</span></div></li>" +
+    "<li><div><b>See the real cost</b><span>Required items are added up at the lowest price we found, new, used, rental or digital, with coursepacks and access codes called out separately.</span></div></li>" +
+    "</ol>" +
+    '<div class="cta"><button class="btn" data-go="course-BGS_337">See an example: BGS 337</button><button class="btn ghost" data-go="majors">Browse by major</button></div></div>' +
+    '<div class="intro-side">' +
+    '<div class="card"><h3>Fall 2026 at a glance</h3><div class="receipt">' +
+    row("Courses", n(D ? UT.courses : 0)) + row("Sections", n(D ? UT.sections : 0)) + row("Sections with books listed", n(D ? UT.listed : 0)) +
+    row("Sections using LTA", n(D ? UT.lta : 0)) + row("Public syllabi linked", n(D ? UT.syl : 0)) +
+    (D && VCOURSES.length ? row("Courses verified by students", n(VCOURSES.length)) : "") +
+    '<div class="lbl" style="margin-top:8px">Typical required cost per section</div><div class="total">' + (D ? money(UT.med) : "…") + "</div>" +
+    '<div class="sub">' + (D ? "Among sections that list required items · book lists as of " + esc(fmtDate(D.asof)) : "Loading course data…") + "</div></div></div>" +
+    '<div class="card"><h3>What the labels mean</h3><dl class="legend">' +
+    '<div><dt><span class="tag acc">Longhorn Textbook Access</span></dt><dd>Digital materials you\'re opted into automatically and billed for through Canvas. The exact price shows in Canvas → My Textbooks.</dd></div>' +
+    '<div><dt><span class="tag info">Coursepack</span></dt><dd>A printed or digital packet sold by a copy shop (Jenn\'s Copies, UT Document Solutions or the Line Store), listed separately from the estimate.</dd></div>' +
+    '<div><dt><span class="tag warn">Access code</span></dt><dd>Online homework or courseware, usually something you can\'t buy used.</dd></div>' +
+    '<div><dt><span class="vbadge sm">' + CHECK + "Student verified</span></dt><dd>A student who took the section answered our textbook survey and confirmed the book list.</dd></div>" +
+    '</dl><p class="fine">Unofficial student project. Book lists change, so double-check your syllabus or Canvas before you buy.</p></div>' +
+    "</div></section>";
+}
+
 /* ---------------- majors ---------------- */
 let MSTATE = {sort: "code", filter: "", csort: "code", cfilter: ""};
 function barChart(rows, fmt, onclick){
@@ -629,7 +682,8 @@ function route(){
   }
   if (h === "majors"){ setTab("majors"); VIEWS.majors = null; renderMajorsHome(); return; }
   setTab("find");
-  if (!$("#result .course")){ const ex = COURSE.get("BGS337"); if (ex){ renderCourse(ex, $("#result"), null); $("#result").insertAdjacentHTML("afterbegin", '<p class="muted" style="margin:0 0 10px;font-size:13px">Example result. Search above for your own course.</p>'); } }
+  VIEWS.result = null; $("#q").value = "";
+  renderIntro();
 }
 
 /* ---------------- events ---------------- */
@@ -672,6 +726,7 @@ document.addEventListener("pointermove", e => {
 });
 window.addEventListener("hashchange", route);
 
+if (!/^#(course|major)/.test(location.hash)) renderIntro();   // show the welcome screen while the data loads
 load().then(() => {
   $("#tries").innerHTML = "<span>Try</span>" + ["BGS 337", "FIN 357", "M 408C", "ACC 311", "GOV 310L", "CH 301"].filter(c => COURSE.has(norm(c))).map(c => '<button class="chipbtn">' + c + "</button>").join("");
   if (VCOURSES.length){
