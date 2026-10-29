@@ -9,6 +9,8 @@
 <meta property="og:description" content="Look up any Fall 2026 UT Austin course to see its required books, materials, sections and estimated cost. Unofficial student project.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23BF5700'/%3E%3Cpath d='M7 8v16M10 8v16M14 8v16M16 8v16M20 8v16M23 8v16M25 8v16' stroke='white' stroke-width='1.6'/%3E%3C/svg%3E">
+<script>window.SITE_ANALYTICS={"goatcounter": "https://utbooklist.goatcounter.com/count"};window.goatcounter={no_onload:true};</script>
+<script data-goatcounter="https://utbooklist.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -279,6 +281,7 @@ footer p{margin:0 0 8px;max-width:90ch}
     <p><b>Estimated required cost</b> adds the lowest listed price of each item marked Required, Longhorn Textbook Access, or "attend class before buying". Optional, recommended and alternative items are left out, and so are coursepacks sold by Jenn's Copies or UT Document Solutions, which are shown separately.</p>
     <p><b>Longhorn Textbook Access (LTA)</b> items are billed through Canvas, and their real price appears only in your Canvas "My Textbooks" tab. UT says the LTA price is the lowest available, so the VitalSource price shown here is an upper bound.</p>
     <p id="vfoot" hidden></p>
+    <p id="afoot" hidden></p>
     <p>Unofficial student project, not affiliated with UT Austin or the University Co-op. Book lists change during the semester, so check your syllabus or Canvas before you buy.</p>
   </div>
 </footer>
@@ -315,6 +318,37 @@ function typeChip(ty){
 let D = null, EX = null, COURSE = new Map(), DEPT = new Map(), UT = null, UNIQ = new Map();
 let VER = {r: [], sec: {}, min: 1, total: 0};   // student survey results (verified.json)
 let VCOURSES = [];
+
+/* ---------------- analytics ----------------
+   Off unless the hosting page defines window.SITE_ANALYTICS (the GitHub Pages build adds it):
+   {goatcounter: "https://CODE.goatcounter.com/count"} and/or {ga: "G-XXXXXXX"}.
+   The site uses #hash routes, so each course, department and the home screen is counted as its own page. */
+const AN = (() => {
+  const cfg = window.SITE_ANALYTICS || null, queue = [];
+  let last = null;
+  const base = () => location.origin + location.pathname.replace(/\/$/, "");
+  function gc(o){
+    if (!cfg || !cfg.goatcounter) return;
+    const g = window.goatcounter;
+    if (g && typeof g.count === "function") g.count(o); else queue.push(o);
+  }
+  function ga(name, params){ if (cfg && cfg.ga && typeof window.gtag === "function") window.gtag("event", name, params); }
+  return {
+    on: !!cfg,
+    page(path, title){
+      if (path === last) return; last = path;
+      gc({path, title});
+      ga("page_view", {page_title: title, page_location: base() + path});
+    },
+    event(kind, label){
+      label = String(label || "").slice(0, 60);
+      gc({path: kind + "/" + label, title: kind + ": " + label, event: true});
+      ga(kind.replace(/[^a-z0-9]+/gi, "_").toLowerCase(), {label});
+    },
+    flush(){ const g = window.goatcounter; if (g && typeof g.count === "function") while (queue.length) g.count(queue.shift()); }
+  };
+})();
+window.addEventListener("load", () => AN.flush());
 
 /* ---------------- student verification ---------------- */
 const CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.5" fill="currentColor"/><path d="M4.6 8.3l2.2 2.2 4.6-4.8" fill="none" stroke="var(--good-soft)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -435,9 +469,18 @@ function showSugg(){
   const box = $("#sugg"), q = $("#q").value;
   cur = search(q); sel = cur.length ? 0 : -1;
   if (!q.trim()) { box.hidden = true; return; }
-  if (!cur.length){ box.innerHTML = '<div class="empty" style="margin:8px">No course matches "' + esc(q) + '". Try a course code like BGS 337, part of a title, or an instructor\'s last name.</div>'; box.hidden = false; return; }
+  if (!cur.length){ box.innerHTML = '<div class="empty" style="margin:8px">No course matches "' + esc(q) + '". Try a course code like BGS 337, part of a title, or an instructor\'s last name.</div>'; box.hidden = false; noteMiss(q); return; }
   box.innerHTML = cur.map((r, i) => '<button role="option" data-i="' + i + '" aria-selected="' + (i === sel) + '"><span class="code">' + esc(r.c.c) + '</span><span class="t">' + (r.c.vsecs.length ? vBadge(r.c, "sm") + " " : "") + esc(tcase(r.c.t)) + (r.why ? ' <span class="muted">· ' + esc(r.why) + "</span>" : "") + '</span><span class="why">' + plural(r.c.s.length, "section") + (r.c.med != null ? " · " + money(r.c.med) : "") + "</span></button>").join("");
   box.hidden = false;
+}
+// Searches that find nothing show what students look for that the site lacks. Wait until typing settles so
+// "bgs 3" on the way to "bgs 337" isn't counted, and count each term once per visit.
+let missTimer = null; const MISSED = new Set();
+function noteMiss(q){
+  clearTimeout(missTimer);
+  const term = q.trim().toLowerCase().replace(/\s+/g, " ");
+  if (term.length < 3 || MISSED.has(term)) return;
+  missTimer = setTimeout(() => { if ($("#q").value.trim().toLowerCase().replace(/\s+/g, " ") === term && !search(term).length){ MISSED.add(term); AN.event("search-no-results", term); } }, 1500);
 }
 function moveSel(d){ if (!cur.length) return; sel = (sel + d + cur.length) % cur.length; [...$("#sugg").children].forEach((b, i) => b.setAttribute("aria-selected", i === sel)); $("#sugg").children[sel]?.scrollIntoView({block: "nearest"}); }
 function pick(c){ $("#sugg").hidden = true; $("#q").value = c.c; go("course-" + hashOf(c.c)); }
@@ -662,11 +705,12 @@ function go(h){ if (location.hash.slice(1) === h) route(); else location.hash = 
 function route(){
   if (!D) return;
   const h = decodeURIComponent(location.hash.slice(1));
+  const coursePage = c => AN.page("/course/" + c.c, c.c + " · " + tcase(c.t));
   if (h.startsWith("course-")){
     setTab("find");
     const c = COURSE.get(norm(unhash(h.slice(7))));
-    if (c){ $("#q").value = c.c; renderCourse(c, $("#result"), null); }
-    else $("#result").innerHTML = '<div class="empty">No Fall 2026 course matches "' + esc(unhash(h.slice(7))) + '".</div>';
+    if (c){ $("#q").value = c.c; renderCourse(c, $("#result"), null); coursePage(c); }
+    else { $("#result").innerHTML = '<div class="empty">No Fall 2026 course matches "' + esc(unhash(h.slice(7))) + '".</div>'; AN.event("course-not-found", unhash(h.slice(7))); }
     return;
   }
   if (h.startsWith("major-")){
@@ -675,18 +719,28 @@ function route(){
     const d = unhash(dpart);
     if (cpart){
       const c = COURSE.get(norm(unhash(cpart)));
-      if (c){ renderCourse(c, $("#majors"), {label: "Back to " + d + " dashboard", go: "major-" + hashOf(d)}); window.scrollTo({top: 0}); return; }
+      if (c){ renderCourse(c, $("#majors"), {label: "Back to " + d + " dashboard", go: "major-" + hashOf(d)}); window.scrollTo({top: 0}); coursePage(c); return; }
     }
     VIEWS.majors = null;
-    renderDept(d); window.scrollTo({top: 0}); return;
+    renderDept(d); window.scrollTo({top: 0});
+    AN.page("/major/" + d, d + " · " + (D.depts[d] || d) + " dashboard"); return;
   }
-  if (h === "majors"){ setTab("majors"); VIEWS.majors = null; renderMajorsHome(); return; }
+  if (h === "majors"){ setTab("majors"); VIEWS.majors = null; renderMajorsHome(); AN.page("/majors", "Majors & departments"); return; }
   setTab("find");
   VIEWS.result = null; $("#q").value = "";
   renderIntro();
+  AN.page("/", "Home");
 }
 
 /* ---------------- events ---------------- */
+// Outbound links: which course pages send students to buy books or read syllabi.
+const OUTBOUND = [[/universitycoop\.com/, "co-op-link"], [/vitalsource\.com/, "vitalsource-link"], [/utdirect\.utexas\.edu|simplesyllabus\.com/, "syllabus-link"], [/jennscopies|linestore|utexas\.edu.*(document|copy)/i, "coursepack-link"]];
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[href^='http']"); if (!a || !AN.on) return;
+  const kind = (OUTBOUND.find(([rx]) => rx.test(a.href)) || [null, "other-link"])[1];
+  const code = a.closest("[data-code]")?.dataset.code || "";
+  AN.event(kind, code || new URL(a.href).hostname);
+}, true);
 document.addEventListener("click", e => {
   const stop = e.target.closest("[data-stop]"); if (stop) return;
   const sb = e.target.closest("#sugg button"); if (sb){ pick(cur[+sb.dataset.i].c); return; }
@@ -734,6 +788,11 @@ load().then(() => {
     const vt = $("#vtries");
     vt.innerHTML = '<span class="vbadge sm">' + CHECK + "Verified by students</span>" + [...VCOURSES].sort((a, b) => latest(b).localeCompare(latest(a))).slice(0, 10).map(c => '<button class="chipbtn">' + esc(c.c) + "</button>").join("");
     vt.hidden = false;
+  }
+  if (AN.on){
+    const af = $("#afoot"), cfg = window.SITE_ANALYTICS;
+    af.innerHTML = "<b>Visit counts.</b> " + (cfg.goatcounter ? "Page views are counted with GoatCounter, which doesn't use cookies or collect personal information." : "Page views are counted with Google Analytics.") + " Only totals are recorded, such as which courses are viewed most.";
+    af.hidden = false;
   }
   if (VER.total){
     const vf = $("#vfoot");
