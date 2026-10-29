@@ -27,10 +27,14 @@ concurrency:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      # Always start from the newest version of the site, even on a "Re-run" of an older run.
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
 
       - name: Download form responses
         id: fetch
@@ -49,18 +53,29 @@ jobs:
           echo "Downloaded $(($(wc -l < "$RUNNER_TEMP/responses.csv") - 1)) response rows"
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
-      - name: Match responses to courses
+      # Match the responses against the newest site data and publish. If something else updates
+      # the site in the meantime, start over from that newer version (up to 3 tries) instead of failing.
+      - name: Match responses to courses and publish
         if: steps.fetch.outputs.ok == 'true'
-        run: python3 .github/scripts/survey_import.py "$RUNNER_TEMP/responses.csv" . --min 1 --quiet
-
-      - name: Publish if anything changed
-        if: steps.fetch.outputs.ok == 'true'
+        env:
+          BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          if git diff --quiet -- verified.json; then
-            echo "No new survey results."; exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add verified.json
-          git commit -m "Update student survey results"
-          git push
+          for attempt in 1 2 3; do
+            git fetch --quiet origin "$BRANCH"
+            git reset --quiet --hard "origin/$BRANCH"
+            python3 .github/scripts/survey_import.py "$RUNNER_TEMP/responses.csv" . --min 1 --quiet
+            if git diff --quiet -- verified.json; then
+              echo "No new survey results. The site is already up to date."; exit 0
+            fi
+            git add verified.json
+            git commit --quiet -m "Update student survey results"
+            if git push --quiet origin "HEAD:$BRANCH"; then
+              echo "Published new survey results."; exit 0
+            fi
+            echo "The site changed while this ran; trying again from the newest version ($attempt of 3)."
+            sleep $((attempt * 5))
+          done
+          echo "::error::Couldn't publish after 3 tries. Run the workflow again in a minute."
+          exit 1
