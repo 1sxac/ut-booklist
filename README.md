@@ -9,9 +9,16 @@ Unofficial student project, not affiliated with UT Austin or the University Co-o
 | File | What it is |
 |---|---|
 | `index.html` | The website |
+| `budget.js` | The **Your budget** and **Cheaper materials** tabs, including the UT dates and dollar figures they use |
 | `data.json` | Courses, sections, books and prices (University Co-op Fall 2026 book list, pulled Oct 13, 2026) |
 | `syllabi.json` | Materials excerpts from public UT syllabi |
 | `verified.json` | Results of the student textbook survey, for the "Student verified" badges |
+
+## Your budget and Cheaper materials tabs
+
+`budget.js` adds two tabs. **Your budget** lets students add courses (or click *Add to my budget* on a course page), then shows what their materials cost, when each bill is due (books before class, LTA charges on the What I Owe due date) and how much to set aside each week, every 2 weeks or monthly so every bill is covered on time. Plans are saved in the visitor's browser only. **Cheaper materials** lists free and lower-cost options, scholarships, offices that can help, key dates and sources.
+
+When UT posts new calendars, update `BCFG` at the top of `budget.js`: class start dates, the Co-op refund window, LTA bill, opt-out and due dates (dates listed in `est` are shown as estimates), the $724 cost-of-attendance figure and the Co-op scholarship amount. Update `checked` when you re-verify the facts on the Cheaper materials tab.
 
 ## Survey results update automatically
 

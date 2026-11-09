@@ -237,6 +237,131 @@ footer p{margin:0 0 8px;max-width:90ch}
   .course,.dash{animation:rise .25s ease-out}
   @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
 }
+
+/* ---------- budget + cheaper materials tabs ---------- */
+.rcol{display:grid;gap:10px;align-content:start;min-width:0}
+.btn.sm{font-size:13px;padding:7px 12px;border-radius:8px}
+.addbud{justify-self:stretch}
+.hint{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.linkbtn{border:0;background:none;padding:0;color:var(--accent-ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:inherit}
+.bp-callout{display:flex;gap:10px;align-items:flex-start;background:var(--info-soft);color:var(--ink-2);border-radius:12px;padding:12px 16px;font-size:13.5px;margin-bottom:20px}
+.bp-callout > span:first-child{color:var(--info);font-weight:700}
+.bp-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:18px;align-items:start}
+.bp-main,.bp-side{display:grid;gap:18px;min-width:0}
+.bp-list{display:grid;gap:12px}
+.bp-item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:12px;background:var(--bg)}
+.bp-chead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.bp-chead .code{font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}
+.bp-chead .code:hover{color:var(--accent-ink)}
+.bp-chead .ct{font-weight:600;color:var(--ink-2);text-transform:capitalize;margin-top:2px;font-size:14px}
+.bp-x{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;width:34px;height:34px;font-size:18px;line-height:1;cursor:pointer;color:var(--muted)}
+.bp-x:hover{border-color:var(--accent);color:var(--accent-ink)}
+.bp-pick{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1.1fr);gap:12px}
+.bp-field{display:grid;gap:6px;min-width:0;align-content:start}
+.bp-field > label,.bp-field > .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.bp-field select,.bp-field input[type=number],.bp-field input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+.bp-field select:focus,.bp-field input:focus{outline:none;border-color:var(--accent)}
+.bp-field input[type=range]{width:100%;accent-color:var(--accent)}
+.bp-field output{text-transform:none;letter-spacing:0;color:var(--ink);margin-left:4px}
+.bp-money{position:relative}
+.bp-money > span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.bp-money input{padding-left:26px!important}
+.bp-extras{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px}
+.bp-check{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer}
+.bp-check.sm{font-size:13px}
+.bp-check input{margin-top:3px;accent-color:var(--accent)}
+.bp-seg{display:flex;background:var(--sunken);border-radius:9px;padding:3px;gap:3px}
+.bp-seg button{flex:1;border:0;background:transparent;border-radius:7px;padding:7px 8px;font-weight:600;font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.bp-seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.bp-settings{display:grid;gap:16px}
+.bp-settings h3{margin-bottom:0}
+.bp-receipt{display:grid;gap:5px;min-width:0}
+.bp-receipt .r span:last-child{font-weight:600;color:var(--ink)}
+.bp-save{margin-top:14px;border-radius:12px;padding:14px 16px;display:grid;gap:4px;background:var(--accent-soft)}
+.bp-save.ok{background:var(--good-soft)}
+.bp-save.warn{background:var(--warn-soft)}
+.bp-save .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--muted)}
+.bp-save .sub{font-size:13px;color:var(--ink-2)}
+.bp-save .warn-t{color:var(--warn);font-weight:600}
+.bp-big{font-family:var(--mono);font-size:32px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.bp-big small{font-family:var(--body);font-size:15px;font-weight:500;letter-spacing:0;color:var(--ink-2)}
+.bp-bench{margin-top:16px;display:grid;gap:6px;font-size:13.5px}
+.bp-bench .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--muted)}
+.bp-bench .row{display:flex;justify-content:space-between;gap:10px}
+.bp-bench .meter{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden}
+.bp-bench .meter i{display:block;height:100%;border-radius:5px;background:var(--accent)}
+.bp-bench .meter.ut i{background:var(--muted)}
+.bp-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.bp-legend span{display:inline-flex;align-items:center;gap:7px}
+.bp-legend .sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+.bp-legend .sw.sv{background:var(--info)}
+.bp-legend .sw.bl{background:var(--accent)}
+.bp-chart{width:100%;height:auto;display:block;margin-bottom:14px}
+.bp-chart .gl{stroke:var(--line);stroke-width:1}
+.bp-chart .base{stroke:var(--muted);stroke-width:1}
+.bp-chart .tk{stroke:var(--muted)}
+.bp-chart .ax{fill:var(--muted);font-size:11px;font-family:var(--mono)}
+.bp-chart .ln{fill:none;stroke-width:2;stroke-linejoin:round}
+.bp-chart .ln.sv{stroke:var(--info)}
+.bp-chart .ln.bl{stroke:var(--accent)}
+.bp-chart .mk{fill:var(--accent);stroke:var(--surface);stroke-width:2;cursor:default}
+.bp-timeline{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.bp-ev{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;align-items:start;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.bp-ev.note{background:var(--sunken);border-color:transparent}
+.bp-ev .d{font-size:12.5px;line-height:1.25;color:var(--muted)}
+.bp-ev .d b{display:block;font-family:var(--mono);font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.bp-ev .what{font-weight:600}
+.bp-ev .sub{font-size:13px;color:var(--ink-2);margin-top:2px}
+.bp-ev .amt{font-family:var(--mono);font-weight:600;font-size:17px;text-align:right}
+.bp-ev .amt small{display:block;font-family:var(--body);font-size:11.5px;font-weight:400;color:var(--muted)}
+.bp-ev .bar{height:6px;border-radius:3px;background:var(--sunken);overflow:hidden;margin-top:8px}
+.bp-ev .bar i{display:block;height:100%;border-radius:3px;min-width:2px;background:var(--good)}
+.bp-ev .bar i.short{background:var(--warn)}
+.bp-ev.past{opacity:.6}
+.bp-welcome{display:grid;gap:14px;padding:6px 4px}
+.bp-welcome h2{font-size:clamp(22px,3vw,30px);font-weight:800;letter-spacing:-.02em;max-width:26ch}
+.bp-steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:bstep}
+.bp-steps li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;align-items:start;counter-increment:bstep}
+.bp-steps li::before{content:counter(bstep);width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--mono);font-weight:600;display:grid;place-items:center}
+.bp-steps b{display:block;margin-top:4px}
+.bp-steps span{display:block;font-size:14px;color:var(--ink-2)}
+.bp-sections{display:grid;gap:34px}
+.bp-sec h2{font-size:clamp(22px,3vw,28px);font-weight:800;letter-spacing:-.015em}
+.bp-sec .intro{display:block;margin:4px 0 14px;color:var(--ink-2);max-width:70ch}
+.bp-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.bp-res{display:grid;gap:8px;align-content:start}
+.bp-res h3{font-size:16.5px;margin:0;display:block}
+.bp-res p{margin:0;font-size:14px;color:var(--ink-2)}
+.bp-res .foot{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;margin-top:4px}
+.bp-res .contact{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+.bp-dates{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.bp-term{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px;font-size:14px}
+.bp-term b{font-family:var(--display);font-size:17px}
+.bp-term .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px dotted var(--line);padding-top:7px}
+.bp-term .row span:last-child{font-size:13px;color:var(--ink)}
+.bp-src{font-size:13px;columns:2 320px;column-gap:28px;padding-left:18px;margin:8px 0 0}
+.bp-src li{margin-bottom:4px;break-inside:avoid}
+@media (max-width:900px){
+  .bp-grid{grid-template-columns:minmax(0,1fr)}
+  .bp-main,.bp-side{display:contents}
+  #bp-courses{order:1} #bp-summary{order:2} #bp-settings{order:3} #bp-schedule{order:4}
+  .bp-pick{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .bp-pick .bp-field:first-child{grid-column:1 / -1}
+}
+@media (max-width:760px){
+  .tabs{margin-left:0;width:100%}
+  .tab{flex:1 1 auto;white-space:nowrap;padding:8px 10px}
+}
+@media (max-width:520px){
+  .tabs{display:grid;grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .bp-pick{grid-template-columns:minmax(0,1fr)}
+  .bp-ev{grid-template-columns:54px minmax(0,1fr);gap:10px}
+  .bp-ev .amt{grid-column:2;text-align:left}
+  .bp-ev .d b{font-size:19px}
+  .bp-big{font-size:28px}
+}
 </style>
 </head>
 <body>
@@ -250,6 +375,8 @@ footer p{margin:0 0 8px;max-width:90ch}
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab" role="tab" id="tab-find" aria-selected="true" aria-controls="panel-find">Find a course</button>
       <button class="tab" role="tab" id="tab-majors" aria-selected="false" aria-controls="panel-majors">Majors</button>
+      <button class="tab" role="tab" id="tab-budget" aria-selected="false" aria-controls="panel-budget">Your budget</button>
+      <button class="tab" role="tab" id="tab-savings" aria-selected="false" aria-controls="panel-savings">Cheaper materials</button>
     </nav>
   </div>
 </header>
@@ -273,6 +400,14 @@ footer p{margin:0 0 8px;max-width:90ch}
   <section class="panel" id="panel-majors" role="tabpanel" aria-labelledby="tab-majors" hidden>
     <div id="majors"><p class="loading">Loading Fall 2026 course data…</p></div>
   </section>
+
+  <section class="panel" id="panel-budget" role="tabpanel" aria-labelledby="tab-budget" hidden>
+    <div id="budget"><p class="loading">Loading Fall 2026 course data…</p></div>
+  </section>
+
+  <section class="panel" id="panel-savings" role="tabpanel" aria-labelledby="tab-savings" hidden>
+    <div id="savings"><p class="loading">Loading…</p></div>
+  </section>
 </main>
 
 <footer>
@@ -287,6 +422,7 @@ footer p{margin:0 0 8px;max-width:90ch}
 </footer>
 <div class="tip" id="tip" hidden></div>
 
+<script src="budget.js"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -582,7 +718,7 @@ function drawCourse(hid){
   const packHtml = pk.length ? '<div class="card"><h3>Coursepacks <span class="muted">not in the estimate above</span></h3>' + pk.map(p => '<div class="pack"><div style="font-weight:600">' + esc(p.t) + '</div><div class="meta muted" style="font-size:13px">' + esc(p.s) + (p.in ? " · " + esc(p.in) : "") + " · " + esc(p.f) + '</div><div class="lowest"><span class="amt">' + money(p.pr) + '</span><span class="basis">' + (p.av ? "available online" : "listed, currently unavailable") + ' · <a href="' + esc(p.u) + '" target="_blank" rel="noopener">Order page ↗</a></span></div></div>').join("") + "</div>" : "";
   host.innerHTML = (back ? '<button class="back" data-back>← ' + esc(back.label) + "</button>" : "") +
     '<article class="course" data-code="' + esc(c.c) + '">' +
-    '<div class="chead"><div><div class="eyebrow">' + esc(c.d) + " · " + esc(deptName) + '</div><h2 class="num">' + esc(c.c) + '</h2><div class="ctitle">' + esc(tcase(c.t)) + "</div>" + vLine(c) + '<div class="tags">' + tags.join("") + '</div></div><div class="receipt">' + receipt + "</div></div>" +
+    '<div class="chead"><div><div class="eyebrow">' + esc(c.d) + " · " + esc(deptName) + '</div><h2 class="num">' + esc(c.c) + '</h2><div class="ctitle">' + esc(tcase(c.t)) + "</div>" + vLine(c) + '<div class="tags">' + tags.join("") + '</div></div><div class="rcol"><div class="receipt">' + receipt + "</div>" + BUDGET.button(c, sec) + "</div></div>" +
     '<div class="cgrid"><div class="card"><h3>Course materials <span class="muted">' + (sec ? "unique " + esc(sec) : "all sections") + "</span></h3>" + matsHtml + "</div>" +
     '<div style="display:grid;gap:18px;min-width:0">' + reportsCard(c, secs) + '<div class="card"><h3>Sections <span class="muted">select one to see its list</span></h3><div class="seclist">' + secHtml + "</div></div>" + packHtml +
     '<div class="card syl" data-syl></div></div></div></article>';
@@ -697,9 +833,10 @@ function mixChart(list){
 
 /* ---------------- routing ---------------- */
 function setTab(t){
-  const f = t === "find";
-  $("#tab-find").setAttribute("aria-selected", f); $("#tab-majors").setAttribute("aria-selected", !f);
-  $("#panel-find").hidden = !f; $("#panel-majors").hidden = f;
+  for (const k of ["find", "majors", "budget", "savings"]){
+    const tb = $("#tab-" + k), p = $("#panel-" + k); if (!tb || !p) continue;
+    tb.setAttribute("aria-selected", k === t); p.hidden = k !== t;
+  }
 }
 function go(h){ if (location.hash.slice(1) === h) route(); else location.hash = h; }
 function route(){
@@ -726,6 +863,8 @@ function route(){
     AN.page("/major/" + d, d + " · " + (D.depts[d] || d) + " dashboard"); return;
   }
   if (h === "majors"){ setTab("majors"); VIEWS.majors = null; renderMajorsHome(); AN.page("/majors", "Majors & departments"); return; }
+  if (h === "budget"){ setTab("budget"); BUDGET.render(); window.scrollTo({top: 0}); AN.page("/budget", "Your budget"); return; }
+  if (h === "savings"){ setTab("savings"); BUDGET.renderSavings(); window.scrollTo({top: 0}); AN.page("/cheaper-materials", "Cheaper materials"); return; }
   setTab("find");
   VIEWS.result = null; $("#q").value = "";
   renderIntro();
@@ -758,6 +897,8 @@ document.addEventListener("keydown", e => {
 });
 $("#tab-find").addEventListener("click", () => { const c = VIEWS.result && VIEWS.result.course; go(c ? "course-" + hashOf(c.c) : "find"); });
 $("#tab-majors").addEventListener("click", () => go("majors"));
+$("#tab-budget").addEventListener("click", () => go("budget"));
+$("#tab-savings").addEventListener("click", () => go("savings"));
 const q = $("#q");
 q.addEventListener("input", () => D && showSugg());
 q.addEventListener("focus", () => D && q.value.trim() && showSugg());
